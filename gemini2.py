@@ -11,12 +11,12 @@ def extract_text_from_pdf(pdf_file):
         text += page.extract_text()
     return text
 
-st.title('AI Research Paper Review Team')
+st.title('AI 연구 논문 리뷰 팀')
 
-st.header('Team Structure')
-st.write("1. Sam (AI PhD): Explains paper content in simple terms")
-st.write("2. Jenny (AI & Education PhD): Simplifies and expands on Sam's draft")
-st.write("3. Will (Team Leader): Finalizes the report")
+st.header('팀 구조')
+st.write("1. 샘 (AI 박사): 논문 내용을 간단한 용어로 설명")
+st.write("2. 제니 (AI & 교육학 박사): 샘의 초안을 더 단순화하고 확장")
+st.write("3. 윌 (팀 리더): 최종 보고서 작성")
 
 # PDF 파일 업로드
 uploaded_file = st.file_uploader("PDF 파일을 선택하거나 여기에 드래그하세요", type="pdf")
@@ -35,43 +35,45 @@ if uploaded_file is not None and api_key:
     # Gemini 모델 설정
     model = genai.GenerativeModel('gemini-pro')
 
-    # Sam의 분석
-    st.subheader("Sam's Initial Analysis")
-    sam_prompt = f"""You are Sam, an AI PhD graduate. Analyze the following research paper:
+    # 샘의 분석
+    st.subheader("샘의 초기 분석")
+    sam_prompt = f"""당신은 AI 박사 졸업생인 샘입니다. 다음 연구 논문을 분석하세요:
 
     {pdf_text}
 
-    Provide an initial draft explaining the paper's content in simpler terms. Focus on key points, methodologies, and findings."""
+    논문의 내용을 더 간단한 용어로 설명하는 초안을 제공하세요. 주요 포인트, 방법론, 그리고 발견 사항에 집중하세요. 한국어로 답변해 주세요."""
 
     sam_response = model.generate_content(sam_prompt)
     st.write(sam_response.text)
 
-    # Jenny의 리뷰
-    st.subheader("Jenny's Review and Enhancement")
-    jenny_prompt = f"""You are Jenny, with PhDs in AI and Education. Review Sam's analysis:
+    # 제니의 리뷰
+    st.subheader("제니의 리뷰 및 개선")
+    jenny_prompt = f"""당신은 AI와 교육학 박사 학위를 가진 제니입니다. 샘의 분석을 검토하세요:
 
     {sam_response.text}
 
-    Simplify the language further, add educational context, and expand on areas needing more explanation."""
+    언어를 더 단순화하고, 교육적 맥락을 추가하며, 추가 설명이 필요한 영역을 확장하세요. 한국어로 답변해 주세요."""
 
     jenny_response = model.generate_content(jenny_prompt)
     st.write(jenny_response.text)
 
-    # Will의 최종 리뷰
-    st.subheader("Will's Final Review and Compilation")
-    will_prompt = f"""You are Will, the team leader. Review both Sam and Jenny's contributions:
+    # 윌의 최종 리뷰
+    st.subheader("윌의 최종 리뷰 및 종합")
+    will_prompt = f"""당신은 팀 리더인 윌입니다. 샘과 제니의 기여를 검토하세요:
 
-    Sam's analysis: {sam_response.text}
+    샘의 분석: {sam_response.text}
 
-    Jenny's review: {jenny_response.text}
+    제니의 리뷰: {jenny_response.text}
 
-    Create a final report covering all key points, ensuring accuracy and readability. Structure the report as follows:
-    1. Executive Summary
-    2. Introduction to the Research Topic
-    3. Key Findings and Methodologies
-    4. Simplified Explanation of Complex Concepts
-    5. Real-world Applications and Implications
-    6. Conclusion and Future Research Directions"""
+    모든 주요 포인트를 다루는 최종 보고서를 작성하고, 정확성과 가독성을 보장하세요. 보고서를 다음 구조로 작성하세요:
+    1. 요약
+    2. 연구 주제 소개
+    3. 주요 발견 사항 및 방법론
+    4. 복잡한 개념의 간단한 설명
+    5. 실제 응용 및 영향
+    6. 결론 및 향후 연구 방향
+    
+    한국어로 답변해 주세요."""
 
     will_response = model.generate_content(will_prompt)
     st.write(will_response.text)
